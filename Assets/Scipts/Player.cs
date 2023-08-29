@@ -16,6 +16,7 @@ namespace KitchenChaos
 
         [SerializeField] private float moveSpeed = 7f;
         [SerializeField] private float rotationSpeed = 10f;
+        [SerializeField] private float playerSize = 0.7f;
         [SerializeField] private GameInputs gameInputs;
 
         private bool isWalking;
@@ -48,7 +49,14 @@ namespace KitchenChaos
             Vector2 moveDir = gameInputs.GetMovementVectorNormalized();
             isWalking = moveDir != Vector2.zero;
             Vector3 moveDirVec3 = new(moveDir.x, 0, moveDir.y);
-            transform.position += moveSpeed * Time.deltaTime * moveDirVec3;
+
+            bool canMove = Physics.Raycast(transform.position, moveDirVec3, playerSize);
+
+            if (canMove)
+            {
+                transform.position += moveSpeed * Time.deltaTime * moveDirVec3;
+            }
+
             transform.forward = Vector3.Slerp(transform.forward, moveDirVec3, Time.deltaTime * rotationSpeed);
         }
 
