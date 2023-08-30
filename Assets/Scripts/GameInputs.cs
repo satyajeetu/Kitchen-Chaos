@@ -1,16 +1,17 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace KitchenChaos
 {
     // Namespace specific properties -------------------------------------------
 
 
-
     public class GameInputs : MonoBehaviour
     {
         // Public Properties ---------------------------------------------------
 
-
+        public event EventHandler onInteractAction;
 
         // Private Fields ------------------------------------------------------
 
@@ -31,11 +32,15 @@ namespace KitchenChaos
         private void OnEnable()
         {
             inputActions.Player.Enable();
+
+            inputActions.Player.Interact.performed += InputActions_OnInteractPerformed;
         }
 
         private void OnDisable()
         {
             inputActions.Player.Disable();
+
+            inputActions.Player.Interact.performed -= InputActions_OnInteractPerformed;
         }
 
 
@@ -55,8 +60,10 @@ namespace KitchenChaos
 
         // Event Handlers ------------------------------------------------------
 
-
-
+        private void InputActions_OnInteractPerformed(InputAction.CallbackContext context)
+        {
+            onInteractAction?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
 
