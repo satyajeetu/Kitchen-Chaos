@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace KitchenChaos
@@ -6,10 +7,12 @@ namespace KitchenChaos
 
 
 
-    public class ClearCounter: BaseCounter, IKitchenObjectParent
+    public class ContainerCounter : BaseCounter
     {
+
         // Public Properties ---------------------------------------------------
 
+        public event EventHandler onPlayerGrabObject;
 
 
         // Private Fields ------------------------------------------------------
@@ -29,7 +32,13 @@ namespace KitchenChaos
 
         public override void Interact(Player player)
         {
+            if (HasKitchenObject())
+            {
+                Transform kitcheObjectTransform = Instantiate(kitchenObjectSO.prefab);
+                kitcheObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(player);
 
+                onPlayerGrabObject?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         // Private Methods -----------------------------------------------------
@@ -42,3 +51,4 @@ namespace KitchenChaos
 
     }
 }
+

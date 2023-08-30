@@ -7,11 +7,11 @@ namespace KitchenChaos
 
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
-        public ClearCounter selectedCounter;
+        public BaseCounter selectedCounter;
     }
 
-    [DefaultExecutionOrder(-1 )]
-    public class Player : MonoBehaviour
+    [DefaultExecutionOrder(-1)]
+    public class Player : MonoBehaviour, IKitchenObjectParent
     {
         // Public Properties ---------------------------------------------------
 
@@ -25,6 +25,8 @@ namespace KitchenChaos
         [SerializeField] private float moveSpeed = 7f;
         [SerializeField] private GameInputs gameInputs;
         [SerializeField] private LayerMask counterLayerMask;
+        [SerializeField] private Transform kitcheObjectHoldPoint;
+
 
         private float rotationSpeed = 10f;
         private float playerRadius = 0.7f;
@@ -32,7 +34,8 @@ namespace KitchenChaos
 
         private bool isWalking;
         private Vector3 lastInteractDir;
-        private ClearCounter selectedCounter;
+        private BaseCounter selectedCounter;
+        private KitchenObject kitchenObject;
 
         // Intitalization ------------------------------------------------------
 
@@ -71,6 +74,31 @@ namespace KitchenChaos
         public bool IsWalking()
         {
             return isWalking;
+        }
+
+        public Transform GetKitchenObjectFollowTransform()
+        {
+            return kitcheObjectHoldPoint;
+        }
+
+        public void SetKitchenObject(KitchenObject kitchenObject)
+        {
+            this.kitchenObject = kitchenObject;
+        }
+
+        public KitchenObject GetKitchenObject()
+        {
+            return kitchenObject;
+        }
+
+        public void ClearKitchenObject()
+        {
+            kitchenObject = null;
+        }
+
+        public bool HasKitchenObject()
+        {
+            return kitchenObject != null;
         }
 
         // Private Methods -----------------------------------------------------
@@ -128,11 +156,11 @@ namespace KitchenChaos
 
             if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycast, interactDistance, counterLayerMask))
             {
-                if (raycast.transform.TryGetComponent(out ClearCounter clearCounter))
+                if (raycast.transform.TryGetComponent(out BaseCounter baseCounter))
                 {
-                    if (selectedCounter != clearCounter)
+                    if (selectedCounter != baseCounter)
                     {
-                        selectedCounter = clearCounter;
+                        selectedCounter = baseCounter;
                         SetSelectedCounter(selectedCounter);
                     }
                 }
@@ -147,7 +175,7 @@ namespace KitchenChaos
             }
         }
 
-        private void SetSelectedCounter(ClearCounter selectedCounter)
+        private void SetSelectedCounter(BaseCounter selectedCounter)
         {
             this.selectedCounter = selectedCounter;
             onSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs { selectedCounter = this.selectedCounter });
@@ -157,7 +185,8 @@ namespace KitchenChaos
 
         private void GameInputs_OnInteractAction(object sender, EventArgs args)
         {
-            selectedCounter?.Interact();
+            if (selectedCounter != null)
+                selectedCounter.Interact(this);
         }
     }
 }

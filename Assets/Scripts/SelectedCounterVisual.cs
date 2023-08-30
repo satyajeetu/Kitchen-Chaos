@@ -15,8 +15,8 @@ namespace KitchenChaos
 
         // Private Fields ------------------------------------------------------
 
-        [SerializeField] private ClearCounter clearCounter;
-        [SerializeField] private GameObject selectedCounterVisual;
+        [SerializeField] private BaseCounter clearCounter;
+        [SerializeField] private GameObject[] selectedCounterVisuals;
 
         // Intitalization ------------------------------------------------------
 
@@ -46,7 +46,10 @@ namespace KitchenChaos
 
         private void Player_OnSelectedCounterChanged(object sender, OnSelectedCounterChangedEventArgs e)
         {
-            selectedCounterVisual.SetActive(e.selectedCounter == clearCounter);
+            foreach (var visual in selectedCounterVisuals)
+            {
+                visual.SetActive(e.selectedCounter == clearCounter);
+            }
         }
 
     }

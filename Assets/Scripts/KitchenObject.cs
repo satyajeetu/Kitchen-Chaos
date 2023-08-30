@@ -16,7 +16,7 @@ namespace KitchenChaos
 
         [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
-        private ClearCounter clearCounter;
+        private IKitchenObjectParent kitchenObjectParent;
 
         // Intitalization ------------------------------------------------------
 
@@ -33,29 +33,29 @@ namespace KitchenChaos
             return kitchenObjectSO;
         }
 
-        public void SetClearCounter(ClearCounter clearCounter)
+        public void SetKitchenObjectParent(IKitchenObjectParent kitchenObject)
         {
-            if (this.clearCounter != null)
+            if (this.kitchenObjectParent != null)
             {
-                this.clearCounter.ClearKitchenObject();
+                this.kitchenObjectParent.ClearKitchenObject();
             }
 
-            this.clearCounter = clearCounter;
+            this.kitchenObjectParent = kitchenObject;
 
-            if (clearCounter.HasKitchenObject())
+            if (kitchenObject.HasKitchenObject())
             {
                 Debug.LogError("Counter already has a KitchenObject!");
             }
 
-            this.clearCounter.SetKitchenObject(this);
+            this.kitchenObjectParent.SetKitchenObject(this);
 
-            transform.parent = clearCounter.GetKitchenObjectFollowTransform();
+            transform.parent = kitchenObject.GetKitchenObjectFollowTransform();
             transform.localPosition = Vector3.zero;
         }
 
-        public ClearCounter GetClearCounter()
+        public IKitchenObjectParent ClearKitchenObjectParent()
         {
-            return clearCounter;
+            return kitchenObjectParent;
         }
 
 
