@@ -20,7 +20,7 @@ namespace KitchenChaos
         [SerializeField] private GameInputs gameInputs;
 
         private bool isWalking;
-
+        private Vector3 stomachHeight = new (0, 0.3f, 0f);
 
         // Intitalization ------------------------------------------------------
 
@@ -32,7 +32,6 @@ namespace KitchenChaos
         {
             MovePlayer();
         }
-
 
         // Public Methods ------------------------------------------------------
 
@@ -47,10 +46,12 @@ namespace KitchenChaos
         private void MovePlayer()
         {
             Vector2 moveDir = gameInputs.GetMovementVectorNormalized();
-            isWalking = moveDir != Vector2.zero;
             Vector3 moveDirVec3 = new(moveDir.x, 0, moveDir.y);
 
-            bool canMove = Physics.Raycast(transform.position, moveDirVec3, playerSize);
+            isWalking = moveDir != Vector2.zero;
+
+            Vector3 startPos = transform.position + stomachHeight;
+            bool canMove = !Physics.Raycast(startPos, moveDirVec3, playerSize);
 
             if (canMove)
             {
