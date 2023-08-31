@@ -118,7 +118,7 @@ namespace KitchenChaos
             if (!canMove)   // If cannot move try sliding to left or right
             {
                 Vector3 moveDirX = new Vector3(moveDirVec3.x, 0, 0).normalized;
-                canMove = !Physics.CapsuleCast(startPos, endPos, playerRadius, moveDirX, moveDistance);
+                canMove = moveDirVec3.x != 0 && !Physics.CapsuleCast(startPos, endPos, playerRadius, moveDirX, moveDistance);
 
                 if (canMove)    // Can slide to only X movement
                 {
@@ -127,7 +127,7 @@ namespace KitchenChaos
                 else    // If cannot move in X Direction
                 {
                     Vector3 moveDirZ = new Vector3(0, 0, moveDirVec3.z).normalized;
-                    canMove = !Physics.CapsuleCast(startPos, endPos, playerRadius, moveDirZ, moveDistance);
+                    canMove = moveDirVec3.z != 0 && !Physics.CapsuleCast(startPos, endPos, playerRadius, moveDirZ, moveDistance);
 
                     if (canMove)    // If can move in Z direction
                     {
