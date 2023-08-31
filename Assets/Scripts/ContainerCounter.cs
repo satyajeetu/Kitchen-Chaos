@@ -32,12 +32,18 @@ namespace KitchenChaos
 
         public override void Interact(Player player)
         {
-            if (HasKitchenObject())
+            if (player.HasKitchenObject())
+            {
+                return;
+            }
+
+            if (!HasKitchenObject())
             {
                 Transform kitcheObjectTransform = Instantiate(kitchenObjectSO.prefab);
                 kitcheObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(player);
 
                 onPlayerGrabObject?.Invoke(this, EventArgs.Empty);
+                Debug.Log(this + "Player Interacted");
             }
         }
 

@@ -162,6 +162,7 @@ namespace KitchenChaos
                     {
                         selectedCounter = baseCounter;
                         SetSelectedCounter(selectedCounter);
+                        Debug.Log(this + selectedCounter?.gameObject.name);
                     }
                 }
                 else
@@ -186,7 +187,11 @@ namespace KitchenChaos
         private void GameInputs_OnInteractAction(object sender, EventArgs args)
         {
             if (selectedCounter != null)
+            {
+                Debug.Log(selectedCounter + " interacted");
                 selectedCounter.Interact(this);
+            }
+
         }
     }
 }
