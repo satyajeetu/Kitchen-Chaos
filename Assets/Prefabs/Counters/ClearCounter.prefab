@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1876459d57e50468ea84bba63cbcc068, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clearCounter: {fileID: 1176738020234903916}
+  baseCounter: {fileID: 1176738020234903916}
   selectedCounterVisuals:
   - {fileID: 7139092256693541855}
 --- !u!4 &2985092274940410939 stripped
@@ -224,8 +224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c80c24bdfebd0437da54f02408427ce4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kitchenObjectSO: {fileID: 11400000, guid: 8d7ab2d450f624112966016944fb824d, type: 2}
   counterTop: {fileID: 6262931960611816449}
+  kitchenObjectSO: {fileID: 11400000, guid: 8d7ab2d450f624112966016944fb824d, type: 2}
 --- !u!4 &3706178367594122646 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9207506506716389445, guid: 092965a94791e4f6ba08e4a2431fd696,

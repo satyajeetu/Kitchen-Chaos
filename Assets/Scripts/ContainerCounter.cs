@@ -36,14 +36,10 @@ namespace KitchenChaos
             {
                 return;
             }
-
             if (!HasKitchenObject())
             {
-                Transform kitcheObjectTransform = Instantiate(kitchenObjectSO.prefab);
-                kitcheObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(player);
-
+                KitchenObject.SpawnKitchenObject(kitchenObjectSO, player);
                 onPlayerGrabObject?.Invoke(this, EventArgs.Empty);
-                Debug.Log(this + "Player Interacted");
             }
         }
 

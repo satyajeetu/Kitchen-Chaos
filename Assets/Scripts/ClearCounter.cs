@@ -38,7 +38,7 @@ namespace KitchenChaos
             }
             else
             {
-                if (player.HasKitchenObject())
+                if (!player.HasKitchenObject())
                 {
                     GetKitchenObject().SetKitchenObjectParent(player);
                 }

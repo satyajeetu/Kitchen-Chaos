@@ -12,6 +12,8 @@ namespace KitchenChaos
         // Public Properties ---------------------------------------------------
 
         public event EventHandler onInteractAction;
+        public event EventHandler onInteractAlternateAction;
+
 
         // Private Fields ------------------------------------------------------
 
@@ -34,6 +36,7 @@ namespace KitchenChaos
             inputActions.Player.Enable();
 
             inputActions.Player.Interact.performed += InputActions_OnInteractPerformed;
+            inputActions.Player.InteractAlternate.performed += InputActions_OnInteractAlternatePreformed;
         }
 
         private void OnDisable()
@@ -41,6 +44,7 @@ namespace KitchenChaos
             inputActions.Player.Disable();
 
             inputActions.Player.Interact.performed -= InputActions_OnInteractPerformed;
+            inputActions.Player.InteractAlternate.performed -= InputActions_OnInteractAlternatePreformed;
         }
 
 
@@ -63,6 +67,11 @@ namespace KitchenChaos
         private void InputActions_OnInteractPerformed(InputAction.CallbackContext context)
         {
             onInteractAction?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void InputActions_OnInteractAlternatePreformed(InputAction.CallbackContext context)
+        {
+            onInteractAlternateAction?.Invoke(this, EventArgs.Empty);
         }
     }
 }

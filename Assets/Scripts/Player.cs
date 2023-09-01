@@ -27,7 +27,6 @@ namespace KitchenChaos
         [SerializeField] private LayerMask counterLayerMask;
         [SerializeField] private Transform kitcheObjectHoldPoint;
 
-
         private float rotationSpeed = 10f;
         private float playerRadius = 0.7f;
         private float playerHeight = 2.0f;
@@ -55,12 +54,14 @@ namespace KitchenChaos
 
         private void OnEnable()
         {
-            gameInputs.onInteractAction += GameInputs_OnInteractAction;    
+            gameInputs.onInteractAction += GameInputs_OnInteractAction;
+            gameInputs.onInteractAlternateAction += GameInputs_OnInteractAlternateAction;
         }
 
         private void OnDisable()
         {
             gameInputs.onInteractAction -= GameInputs_OnInteractAction;
+            gameInputs.onInteractAlternateAction -= GameInputs_OnInteractAlternateAction;
         }
 
         private void Update()
@@ -162,7 +163,6 @@ namespace KitchenChaos
                     {
                         selectedCounter = baseCounter;
                         SetSelectedCounter(selectedCounter);
-                        Debug.Log(this + selectedCounter?.gameObject.name);
                     }
                 }
                 else
@@ -186,12 +186,22 @@ namespace KitchenChaos
 
         private void GameInputs_OnInteractAction(object sender, EventArgs args)
         {
-            if (selectedCounter != null)
+            if (selectedCounter == null)
             {
-                Debug.Log(selectedCounter + " interacted");
-                selectedCounter.Interact(this);
+                return;
             }
 
+            selectedCounter.Interact(this);
+        }
+
+        private void GameInputs_OnInteractAlternateAction(object sender, EventArgs e)
+        {
+            if (selectedCounter == null)
+            {
+                return;
+            }
+
+            selectedCounter.InteractAlternate(this);
         }
     }
 }

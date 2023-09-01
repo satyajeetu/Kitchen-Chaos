@@ -59,6 +59,10 @@ namespace KitchenChaos
             return kitchenObject != null;
         }
 
+        public virtual void InteractAlternate(Player player)
+        {
+        }
+
 
         // Private Methods -----------------------------------------------------
 
