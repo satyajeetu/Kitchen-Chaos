@@ -13,6 +13,7 @@ namespace KitchenChaos
 
         // Public Properties ---------------------------------------------------
 
+        public static event EventHandler onAnyObjectPlacedHere;
 
 
         // Private Fields ------------------------------------------------------
@@ -42,6 +43,11 @@ namespace KitchenChaos
         public void SetKitchenObject(KitchenObject kitchenObject)
         {
             this.kitchenObject = kitchenObject;
+
+            if (kitchenObject != null)
+            {
+                onAnyObjectPlacedHere?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public KitchenObject GetKitchenObject()

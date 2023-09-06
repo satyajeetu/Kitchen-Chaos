@@ -5,14 +5,11 @@ namespace KitchenChaos
 {
     // Namespace specific properties -------------------------------------------
 
-    public class OnProgressChagnedEventArgs : EventArgs
-    {
-        public float progressNormalized;
-    }
-
-    public class CuttingCounter : BaseCounter
+    public class CuttingCounter : BaseCounter, IHasProgress
     {
         // Public Properties ---------------------------------------------------
+
+        public static event EventHandler onAnyCut;
 
         public event EventHandler<OnProgressChagnedEventArgs> onProgressChanged;
         public event EventHandler onCut;
@@ -57,6 +54,16 @@ namespace KitchenChaos
                 {
                     GetKitchenObject().SetKitchenObjectParent(player);
                 }
+                else if (player.HasKitchenObject())
+                {
+                    if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
+                    {
+                        if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                        {
+                            GetKitchenObject().DestroySelf();
+                        }
+                    }
+                }
             }
         }
 
@@ -68,6 +75,7 @@ namespace KitchenChaos
                 cuttingProgress++;
 
                 onCut?.Invoke(this, EventArgs.Empty);
+                onAnyCut?.Invoke(this, EventArgs.Empty);
 
                 CuttingRecipeSO cuttingRecipe = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 

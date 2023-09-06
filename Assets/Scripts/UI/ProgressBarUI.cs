@@ -16,10 +16,11 @@ namespace KitchenChaos
 
         // Private Fields ------------------------------------------------------
 
-        [SerializeField] private CuttingCounter cuttingCounter;
+        [SerializeField] private GameObject hasProgressGameObject;
         [SerializeField] private Image barImage;
         [SerializeField] private GameObject progressBarPanel;
 
+        private IHasProgress hasProgress;
 
         // Intitalization ------------------------------------------------------
 
@@ -27,23 +28,31 @@ namespace KitchenChaos
 
         // Unity Methods -------------------------------------------------------
 
+        private void Awake()
+        {
+            hasProgress = hasProgressGameObject.GetComponent<IHasProgress>();
+
+            if (hasProgress == null)
+            {
+                Debug.LogError(gameObject + " no IHasProgress");
+            }
+        }
+
         private void Start()
         {
-            Debug.Log("Start");
             Hide();
             barImage.fillAmount = 0.0f;
         }
 
         private void OnEnable()
         {
-            Debug.Log("Enabled");
-            cuttingCounter.onProgressChanged += CuttingCounter_onProgresseChanged;
+            hasProgress.onProgressChanged += HasProgress_OnProgressChanged;
         }
 
 
         private void OnDisable()
         {
-            cuttingCounter.onProgressChanged -= CuttingCounter_onProgresseChanged;
+            hasProgress.onProgressChanged -= HasProgress_OnProgressChanged;
         }
 
 
@@ -65,7 +74,7 @@ namespace KitchenChaos
 
         // Event Handlers ------------------------------------------------------
 
-        private void CuttingCounter_onProgresseChanged(object sender, OnProgressChagnedEventArgs e)
+        private void HasProgress_OnProgressChanged(object sender, OnProgressChagnedEventArgs e)
         {
             barImage.fillAmount = e.progressNormalized;
 

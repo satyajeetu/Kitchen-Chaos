@@ -17,6 +17,7 @@ namespace KitchenChaos
 
         public static Player Singleton { get; private set; }
 
+        public event EventHandler onPickSomething;
         public event EventHandler<OnSelectedCounterChangedEventArgs> onSelectedCounterChanged;
 
 
@@ -54,8 +55,8 @@ namespace KitchenChaos
 
         private void OnEnable()
         {
-            gameInputs.onInteractAction += GameInputs_OnInteractAction;
             gameInputs.onInteractAlternateAction += GameInputs_OnInteractAlternateAction;
+            gameInputs.onInteractAction += GameInputs_OnInteractAction;
         }
 
         private void OnDisable()
@@ -85,6 +86,11 @@ namespace KitchenChaos
         public void SetKitchenObject(KitchenObject kitchenObject)
         {
             this.kitchenObject = kitchenObject;
+
+            if (kitchenObject != null)
+            {
+                onPickSomething?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public KitchenObject GetKitchenObject()
