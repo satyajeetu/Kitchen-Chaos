@@ -192,6 +192,11 @@ namespace KitchenChaos
 
         private void GameInputs_OnInteractAction(object sender, EventArgs args)
         {
+            if (!GameManager.Singleton.IsGamePlaying())
+            {
+                return;
+            }
+
             if (selectedCounter == null)
             {
                 return;
@@ -202,6 +207,11 @@ namespace KitchenChaos
 
         private void GameInputs_OnInteractAlternateAction(object sender, EventArgs e)
         {
+            if (!GameManager.Singleton.IsGamePlaying())
+            {
+                return;
+            }
+
             if (selectedCounter == null)
             {
                 return;
