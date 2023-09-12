@@ -34,7 +34,8 @@ namespace KitchenChaos
         {
             spawnPlateTimer += Time.deltaTime;
 
-            if (spawnPlateTimer > SPAWN_PLATE_TIMER_MAX)
+            if (GameManager.Singleton.IsGamePlaying()
+                && spawnPlateTimer > SPAWN_PLATE_TIMER_MAX)
             {
                 spawnPlateTimer = 0;
 

@@ -17,6 +17,9 @@ namespace KitchenChaos
 
         [SerializeField] private AudioClipsSO audioClipsSO;
 
+        private const string PLAYER_PREFS_SOUND_EFFECTS_VOLUME = "SoundEffectsVolume";
+
+        private float globalVolume = 1f;
 
         // Intitalization ------------------------------------------------------
 
@@ -27,6 +30,8 @@ namespace KitchenChaos
         private void Awake()
         {
             Singleton = this;
+
+            globalVolume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, 1.0f);
         }
 
         private void OnEnable()
@@ -51,16 +56,41 @@ namespace KitchenChaos
 
         // Public Methods ------------------------------------------------------
 
+        public void PlayCountDownSound()
+        {
+            PlaySound(audioClipsSO.warning, Vector3.zero);
+        }
+
         public void PlayFootstepsSound(Transform transform, float volume = 1)
         {
             PlaySound(audioClipsSO.footSteps, transform.position, volume);
+        }
+
+        public void ChangeGlobalVolume()
+        {
+            globalVolume += .1f;
+
+            if (globalVolume > 1f)
+                globalVolume = 0;
+
+            PlayerPrefs.SetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, globalVolume);
+        }
+
+        public float GetGlobalVolume()
+        {
+            return globalVolume;
+        }
+
+        public void PlayWarningSound(Vector3 position)
+        {
+            PlaySound(audioClipsSO.warning, position);
         }
 
         // Private Methods -----------------------------------------------------
 
         private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1)
         {
-            AudioSource.PlayClipAtPoint(audioClip, position, volume);
+            AudioSource.PlayClipAtPoint(audioClip, position, volume * globalVolume);
         }
 
         private void PlaySound(AudioClip[] audioClipArray, Vector3 position, float volume = 1)

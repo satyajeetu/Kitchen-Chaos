@@ -125,6 +125,11 @@ namespace KitchenChaos
             }
         }
 
+        public bool IsFried()
+        {
+            return stoveState == StoveState.FIRED;
+        }
+
         // Private Methods -----------------------------------------------------
 
         private KitchenObjectSO GetOutputForInput(KitchenObjectSO inputSo)

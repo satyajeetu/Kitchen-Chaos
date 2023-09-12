@@ -29,6 +29,8 @@ namespace KitchenChaos
         private float spawnRecipieTimerMax = 4f;
         private int waitingRecipieMax = 4;
 
+        private int successfulRecipiesAmount;
+
         // Intitalization ------------------------------------------------------
 
 
@@ -57,6 +59,11 @@ namespace KitchenChaos
             return new (waitingRecipeSOList);
         }
 
+        public int GetSuccessfulRecipieAmount()
+        {
+            return successfulRecipiesAmount;
+        }
+
         // Private Methods -----------------------------------------------------
 
         private void GenerateDeliveryRequirements()
@@ -67,7 +74,8 @@ namespace KitchenChaos
             {
                 spawnRecipieTimer = spawnRecipieTimerMax;
 
-                if (waitingRecipieMax > waitingRecipeSOList.Count)
+                if (GameManager.Singleton.IsGamePlaying()
+                    && waitingRecipieMax > waitingRecipeSOList.Count)
                 {
                     RecipieSO waitingRecipieSO = recipieListSO.RecipieSOs[Random.Range(0, recipieListSO.RecipieSOs.Count)];
                     waitingRecipeSOList.Add(waitingRecipieSO);
@@ -113,6 +121,7 @@ namespace KitchenChaos
                     onRecipieCompleted?.Invoke(this, EventArgs.Empty);
                     onRecipieSuccess?.Invoke(this, EventArgs.Empty);
                     waitingRecipeSOList.RemoveAt(i);
+                    successfulRecipiesAmount++;
                     return;
                 }
             }

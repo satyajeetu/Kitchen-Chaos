@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace KitchenChaos
@@ -12,21 +13,25 @@ namespace KitchenChaos
         GAME_OVER
     }
 
+    [DefaultExecutionOrder(-1)]
     public class GameManager : MonoBehaviour
     {
         // Public Properties ---------------------------------------------------
 
         public static GameManager Singleton;
 
+        public event EventHandler onStateChanged;
+        public event EventHandler onGamePaused;
+        public event EventHandler onGameUnpaused;
 
         // Private Fields ------------------------------------------------------
 
         private GameState gameState;
 
-        private float waitingToStartTimer = 1;
         private float countdownToStartTimer = 3;
-        private float gamePlayingTimer = 10f;
-
+        private float gamePlayingTimer;
+        private float gamePlayingTimerMax = 10f;
+        private bool isGamePaused = false;
 
         // Intitalization ------------------------------------------------------
 
@@ -41,18 +46,25 @@ namespace KitchenChaos
             gameState = GameState.WAITING_TO_START;
         }
 
+        private void OnEnable()
+        {
+            GameInputs.Singleton.onPauseButtonClicked += GameInputs_OnPauseButtonClicked;
+            GameInputs.Singleton.onInteractAction += GameInputs_OnInteractAction;
+        }
+
+        private void OnDisable()
+        {
+            GameInputs.Singleton.onPauseButtonClicked -= GameInputs_OnPauseButtonClicked;
+            GameInputs.Singleton.onInteractAction -= GameInputs_OnInteractAction;
+        }
+
         private void Update()
         {
             switch (gameState)
             {
                 case GameState.WAITING_TO_START:
 
-                    waitingToStartTimer -= Time.deltaTime;
-
-                    if (waitingToStartTimer < 0)
-                    {
-                        gameState = GameState.COUNTDOWN_TO_START;
-                    }
+                
 
                     break;
 
@@ -63,6 +75,9 @@ namespace KitchenChaos
                     if (countdownToStartTimer < 0)
                     {
                         gameState = GameState.GAME_PLAYING;
+                        onStateChanged?.Invoke(this, EventArgs.Empty);
+
+                        gamePlayingTimer = gamePlayingTimerMax;
                     }
 
                     break;
@@ -74,6 +89,7 @@ namespace KitchenChaos
                     if (gamePlayingTimer < 0)
                     {
                         gameState = GameState.GAME_OVER;
+                        onStateChanged?.Invoke(this, EventArgs.Empty);
                     }
 
                     break;
@@ -94,13 +110,60 @@ namespace KitchenChaos
             return gameState == GameState.GAME_PLAYING;
         }
 
-        // Private Methods -----------------------------------------------------
+        public bool IsCountdownToStartActive()
+        {
+            return gameState == GameState.COUNTDOWN_TO_START;
+        }
 
+        public bool IsGameOverActive()
+        {
+            return gameState == GameState.GAME_OVER;
+        }
+
+        public float GetCountdownToStartTimer()
+        {
+            return countdownToStartTimer;
+        }
+
+        public float GetGameplayTimerNormalized()
+        {
+            // Debug.Log(gamePlayingTimerMax + " " + gamePlayingTimer);
+            return 1 - gamePlayingTimer / gamePlayingTimerMax;
+        }
+
+        public void TogglePause()
+        {
+            if (!isGamePaused)
+            {
+                Time.timeScale = 0f;
+                isGamePaused = true;
+                onGamePaused?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                Time.timeScale = 1f;
+                isGamePaused = false;
+                onGameUnpaused?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        // Private Methods -----------------------------------------------------
 
 
         // Event Handlers ------------------------------------------------------
 
+        private void GameInputs_OnPauseButtonClicked(object sender, EventArgs e)
+        {
+            TogglePause();
+        }
 
-
+        private void GameInputs_OnInteractAction(object sender, EventArgs e)
+        {
+            if (gameState == GameState.WAITING_TO_START)
+            {
+                gameState = GameState.COUNTDOWN_TO_START;
+                onStateChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
     }
 }

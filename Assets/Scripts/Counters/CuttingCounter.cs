@@ -99,6 +99,11 @@ namespace KitchenChaos
             }
         }
 
+        new public static void ResetStaticData()
+        {
+            onAnyCut = null;
+        }
+
         // Private Methods -----------------------------------------------------
 
         private KitchenObjectSO GetOutputForInput(KitchenObjectSO inputSo)

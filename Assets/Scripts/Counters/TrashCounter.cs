@@ -38,6 +38,10 @@ namespace KitchenChaos
             }
         }
 
+        new public static void ResetStaticData()
+        {
+            onAnyObjectTrashed = null;
+        }
 
         // Private Methods -----------------------------------------------------
 

@@ -69,6 +69,10 @@ namespace KitchenChaos
         {
         }
 
+        public static void ResetStaticData()
+        {
+            onAnyObjectPlacedHere = null;
+        }
 
         // Private Methods -----------------------------------------------------
 

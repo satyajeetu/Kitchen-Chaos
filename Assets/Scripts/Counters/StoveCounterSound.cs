@@ -17,6 +17,8 @@ namespace KitchenChaos
         [SerializeField] private StoveCounter stoveCounter;
 
         private AudioSource audioSource;
+        private float warningSoundTimer;
+        private bool playWarningSound;
 
         // Intitalization ------------------------------------------------------
 
@@ -32,11 +34,30 @@ namespace KitchenChaos
         private void OnEnable()
         {
             stoveCounter.OnStoveStateChanged += StoveCounter_OnStoveStateChanged;
+            stoveCounter.onProgressChanged += StoveCounter_onProgressChanged;
         }
+
 
         private void OnDisable()
         {
             stoveCounter.OnStoveStateChanged -= StoveCounter_OnStoveStateChanged;
+            stoveCounter.onProgressChanged -= StoveCounter_onProgressChanged;
+        }
+
+        private void Update()
+        {
+            if (playWarningSound)
+            {
+                warningSoundTimer -= Time.deltaTime;
+
+                if (warningSoundTimer < 0)
+                {
+                    float warningSoundTimerMax = 0.2f;
+                    warningSoundTimer = warningSoundTimerMax;
+
+                    SoundManger.Singleton.PlayWarningSound(stoveCounter.transform.position);
+                }
+            }
         }
 
         // Public Methods ------------------------------------------------------
@@ -63,6 +84,11 @@ namespace KitchenChaos
             }
         }
 
+        private void StoveCounter_onProgressChanged(object sender, OnProgressChagnedEventArgs e)
+        {
+            float burningShowProgressAmount = 0.5f;
+            playWarningSound = stoveCounter.IsFried() && e.progressNormalized >= burningShowProgressAmount;
+        }
 
     }
 }
