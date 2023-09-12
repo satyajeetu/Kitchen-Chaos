@@ -3419,6 +3419,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeliveryCounter
       objectReference: {fileID: 0}
+    - target: {fileID: 8267566551583064202, guid: 8cb29d375e90a4d97a801f4ab7ec2f49,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8267566551583064202, guid: 8cb29d375e90a4d97a801f4ab7ec2f49,
+        type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8796112282197247577, guid: 8cb29d375e90a4d97a801f4ab7ec2f49,
         type: 3}
       propertyPath: m_CastShadows
